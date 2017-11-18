@@ -20,4 +20,3 @@ class Document: UIDocument {
     }
 }
 
-//ここから、直弥が付け加えた処理

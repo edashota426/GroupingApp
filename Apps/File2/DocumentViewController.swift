@@ -37,6 +37,45 @@ class DocumentViewController: UIViewController {
         }
     }
 }
+//アプリ内に保存する
+    //サンドボックスの場所を得る
+        let documentsPath = NSSewarchPathForDirectoriesInDomains(#colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+            .DocumentDirectory
+            .UserDomainMask,
+            true)[0] as! String
+print("documentsPath",: \(documentsPath))
+    //UIDocumentサブクラスの概要
+class USDocument: UIdocument {
+    
+    //各データに対応したstatic定数を宣言する
+    struct USFileWrapperKeys {
+        static let IMG = "USDocument.img"
+        static let PLACE = "USDocument.place"
+        static let DATE = "USDocument.date"
+        static let DETAIL = "USDocument.detail"
+    }
+    //記録したい内容を保持するメンバ変数を宣言します
+    var img:UIImage?
+    var place:String?
+    var date:NSDate?
+    var detail:String?
+    //上記の内容をひとまとめにパッケージするNSFileWrapperも、
+    //メンバ変数として宣言する
+    var fileWrapper:NSFileWrapper?
+    
+    //MARK:読み出し、書きこみ用のメソッド
+    override func loadFromContents(contents: AnyObject,
+        ofType TypeName:String,
+        error outError:NSErrorPointer) -> Bool {
+        ...
+        
+    }
+    override func contentsForType(typeName: String,
+                                  error outError: NSErrorPointer) -> Bool {
+        ...
+    }
+}
+
 //11/18 test 始まり
 class ViewController: UIViewController,UITableViewDataSource {
     
