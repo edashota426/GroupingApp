@@ -19,4 +19,5 @@ class Document: UIDocument {
         // Load your document from contents
     }
 }
+//メモ：UIDDocumentVCでの変化（削除）などは全てこちらに反映される。
 

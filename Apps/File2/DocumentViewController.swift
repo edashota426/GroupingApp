@@ -8,7 +8,8 @@
 
 import UIKit
 
-//1st Scene:ファイル選択画面
+//<ファイル選択>
+//1st Scene:ファイル選択ボタン：
 class DocumentViewController: UIViewController {
     
     @IBAction func selectFile(_ sender: Any) {
@@ -20,7 +21,7 @@ class DocumentViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        // Access the document
+        // iCloud File画面への繊維
         document?.open(completionHandler: { (success) in
             if success {
                 // Display the content of the document, e.g.:
@@ -37,7 +38,7 @@ class DocumentViewController: UIViewController {
         }
     }
 }
-//アプリ内に保存する
+//アプリ内にファイルを保存する
     //サンドボックスの場所を得る
         let documentsPath = NSSewarchPathForDirectoriesInDomains(#colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
             .DocumentDirectory
@@ -61,24 +62,21 @@ class USDocument: UIdocument {
     var detail:String?
     //上記の内容をひとまとめにパッケージするNSFileWrapperも、
     //メンバ変数として宣言する
-    var fileWrapper:NSFileWrapper?
+    var fileWrapper:FileWrapper?
     
     //MARK:読み出し、書きこみ用のメソッド
     override func loadFromContents(contents: AnyObject,
         ofType TypeName:String,
         error outError:NSErrorPointer) -> Bool {
-        ...
-        
-    }
+        ...}
     override func contentsForType(typeName: String,
                                   error outError: NSErrorPointer) -> Bool {
-        ...
-    }
+        ...}
 }
 
 //11/18 test 始まり
 class ViewController: UIViewController,UITableViewDataSource {
-    
+    @IBOutlet weak var testTableView: UITableView!
     //hsdGroupingTest.csv
     var dataList:[String] = []
     
@@ -124,7 +122,55 @@ class ViewController: UIViewController,UITableViewDataSource {
     func tableView(_ tableView:UITableView, numberOfRowsInSection section:Int) -> Int {
         return dataList.count
     }
-}
 // 11/18test
+    
+//<並び替える項目を選択・削除する画面>
+    
+    //ボタン押下時に呼ばれるメソッド:：編集モード内においては、セルの削除や並び替えやができるようにする
+    @IBAction func changeMode(_ sender: Any) {
+    }
+    @IBAction func changeMode(sender: AnyObject) {
+        //通常モードと編集モードを切り替える。。
+        if(testTableView.isEditing == true) {
+            testTableView.isEditing = false
+        } else {
+            testTableView.isEditing = true
+        }
+    }
+    
+    //テーブルビュー編集時に呼ばれるメソッド:編集モード時に、項目を削除することができる
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        
+        //削除の場合、配列からデータを削除する。
+        if( editingStyle == UITableViewCellEditingStyle.delete) {
+            dataList.remove(at: indexPath.row)
+        }
+        
+        //テーブルの再読み込み
+        tableView.reloadData()
+    }
+    
+    //並び替え時に呼ばれるメソッド：編集モード時に、並び替えることができる
+    private func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: IndexPath, toIndexPath destinationIndexPath: IndexPath){
+        
+        //移動されたデータを取得する。
+        let moveData = tableView.cellForRow(at: sourceIndexPath)?.textLabel!.text
+        
+        //元の位置のデータを配列から削除する。
+        dataList.remove(at: sourceIndexPath.row)
+        
+        //移動先の位置にデータを配列に挿入する。
+        dataList.insert(moveData!, at:destinationIndexPath.row)
+    }
+//<並び替えるグループ数を表示する画面>
+
+    
+    //最初からあるメソッド
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
+}
+
+
 
 
