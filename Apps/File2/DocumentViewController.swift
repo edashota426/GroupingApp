@@ -73,55 +73,120 @@ class USDocument: UIdocument {
                                   error outError: NSErrorPointer) -> Bool {
         ...}
 }
+//iCLoud kit用のコードはこちら。上記は削除して良い
+class ViewController: UIViewController, UITextFieldDelegate {
+    
+    let textField = UITextField()
+    let textFileName = "test.txt"
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.view.backgroundColor = UIColor(white: 1, alpha: 0.9)
+        
+        // 保存するテキストを入力するテキストフィールド
+        textField.backgroundColor = UIColor.white
+        textField.frame = CGRect(x: 0, y: 100, width: self.view.frame.width, height: 50)
+        textField.center.x = self.view.center.x
+        textField.delegate = self
+        textField.placeholder = "Input"
+        self.view.addSubview(textField)
+        
+        // テキストファイルを作成して書き込む
+        let button = UIButton(type: .system)
+        button.setTitle("書き込み", for: .normal)
+        button.addTarget(self, action: #selector(self.writeTextToiCloudContainer), for: .touchUpInside)
+        button.sizeToFit()
+        button.center = CGPoint(x: self.view.frame.width / 2, y: self.view.frame.height - 150)
+        self.view.addSubview(button)
+        
+        // 保存したテキストを読み込む
+        let readButton = UIButton(type: .system)
+        readButton.setTitle("読み込み", for: .normal)
+        readButton.addTarget(self, action: #selector(self.readTextFromiCloudContainer), for: .touchUpInside)
+        readButton.sizeToFit()
+        readButton.center = CGPoint(x: self.view.frame.width / 2, y: self.view.frame.height - 100)
+        self.view.addSubview(readButton)
+    }
+    
+    @objc func writeTextToiCloudContainer() {
+        
+        // 特定の iCloud Container を指定する場合
+        // let url = FileManager.default.url(forUbiquityContainerIdentifier: "iCloud.com.joyplot")
+        
+        DispatchQueue.global().async(execute: {
+            
+            // コンテナが一つしかない場合は nil でもOK
+            if let url = FileManager.default.url(forUbiquityContainerIdentifier: nil) {
+                
+                let fileURL = url.appendingPathComponent(self.textFileName)
+                print("fileURL: \(fileURL)")
+                
+                
+                do {
+                    try self.textField.text?.write(to: fileURL, atomically: true, encoding: .utf8)
+                } catch {
+                    print("write error")
+                }
+            }
+        })
+    }
+    
+    @objc func readTextFromiCloudContainer() {
+        
+        DispatchQueue.global().async(execute: {
+            
+            if let url = FileManager.default.url(forUbiquityContainerIdentifier: nil) {
+                
+                let filePath = url.appendingPathComponent(self.textFileName)
+                do {
+                    let readText = try String(contentsOf: filePath)
+                    
+                    DispatchQueue.main.async(execute: {
+                        // UILabelのテキストを更新
+                        let label = UILabel()
+                        label.text = readText
+                        label.font = UIFont(name: "HiraMinProN-W3", size: 20)
+                        label.sizeToFit()
+                        label.center = self.view.center
+                        self.view.addSubview(label)
+                    })
+                } catch {
+                    print("read error")
+                }
+            }
+        })
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
+}
+
+//ここまでがicloud containerの獲得と、書き出し、読み込み、保存。
 
 //11/18 test 始まり
-//<ドキュメントファイルからrowを読み込み、UITableViewに表示させるメソッド>
+//<ドキュメントファイルからrowを読み込み、UITableViewに表示させるメソッド> ->どこからファイル持ってくるのか指定する必要あり。
 class ViewController: UIViewController,UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        <#code#>
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        <#code#>
+    }
+    
     @IBOutlet weak var testTableView: UITableView!
     //hsdGroupingTest.csv
     var dataList:[String] = []
     
     
-    //最初からあるメソッド
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        do {
-            //CSVファイルのパスを取得する。
-            let csvPath = Bundle.main.path(forResource: "hsdGroupingTest", ofType: "csv")
-            
-            //CSVファイルのデータを取得する。
-            let csvData = try String(contentsOfFile:csvPath!, encoding:String.Encoding.utf8)
-            
-            //改行区切りでデータを分割して配列に格納する。
-            dataList = csvData.components(separatedBy: "\n")
-            
-        } catch {
-            print(error)
-        }
-    }
-    
-    
-    //データを返すメソッド
-    func tableView(_ tableView:UITableView, cellForRowAt indexPath:IndexPath) -> UITableViewCell {
-        
-        //セルを取得する。
-        let cell = tableView.dequeueReusableCell(withIdentifier: "TestCell", for:indexPath) as UITableViewCell
-        
-        //カンマでデータを分割して配列に格納する。
-        let dataDetail = dataList[indexPath.row].components(separatedBy: ",")
-        
-        //セルのラベルにsex,skill,Region,Presen,JFを設定する。
-        cell.textLabel?.text = dataDetail[5]
-        cell.detailTextLabel?.text = "Sex：" + String(dataDetail[1])
-        
-        return cell
-    }
-    
-    
-    //データの個数を返すメソッド
-    func tableView(_ tableView:UITableView, numberOfRowsInSection section:Int) -> Int {
-        return dataList.count
+
     }
 // 11/18test
     
@@ -163,7 +228,7 @@ class ViewController: UIViewController,UITableViewDataSource {
         //移動先の位置にデータを配列に挿入する。
         dataList.insert(moveData!, at:destinationIndexPath.row)
     }
-//<並び替えるグループ数を表示する画面>
+//<並び替えるグループ数を表示する画面>：icloud containerの獲得時に最初から指定できているのか？実装した時に確認
     class ViewController: UIViewController, UITextFieldDelegate {
         
         private var myTextField: UITextField!
@@ -220,12 +285,40 @@ class ViewController: UIViewController,UITableViewDataSource {
         }
         
     }
+//＜グルーピング開始ボタン押下時に呼ばれるメソッド:：グルーピングの裏の処理開始と、画面遷移＞
+    //ファイルに、「カテゴリ」「グループ数」を外部引数として飛ばす。
+    
+    //並び替えが終了した時に、次の画面遷移
+    //失敗した時の画面移動しない
+    
+    //<並び替えた結果を表示する画面>
+        //<並び替えた結果をTableViewに表示する>＝<ドキュメントファイルからrowを読み込み、UITableViewに表示させるメソッド>
+class ViewController: UIViewController,UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        <#code#>
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        <#code#>
+    }
+    
+    @IBOutlet weak var testTableView: UITableView!
+    //hsdGroupingTest.csv
+    var dataList:[String] = []
+
+    
+    //<保存ボタンを押下時に、呼ばれるメソッド：データをcsvファイルとしてicloudに保存する>
+        //<並び替えた結果を>
+    
+    //<>
+    //
+
     
 //最初からあるメソッド
-    override func viewDidLoad() {
+func viewDidLoad() {
         super.viewDidLoad()
     }
-}
+
 
 
 
