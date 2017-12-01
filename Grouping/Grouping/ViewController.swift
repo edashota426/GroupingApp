@@ -20,6 +20,36 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 //ここから書き足していったコード
+    
+//ファイルを選択する
+    class DocumentViewController: UIViewController {
+    
+    @IBAction func selectFile(_ sender: Any) {
+    }
+    @IBOutlet weak var documentNameLabel: UILabel!
+    
+    var document: UIDocument?
+    
+    override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    
+    // iCloud File画面への繊維
+    document?.open(completionHandler: { (success) in
+    if success {
+    // Display the content of the document, e.g.:
+    self.documentNameLabel.text = self.document?.fileURL.lastPathComponent
+    } else {
+    // Make sure to handle the failed import appropriately, e.g., by presenting an error message to the user.
+    }
+    })
+    }
+    
+    @IBAction func dismissDocumentViewController() {
+    dismiss(animated: true) {
+    self.document?.close(completionHandler: nil)
+    }
+    }
+    }
 }//icloud containerにあるcsvデータを引数に名前を表示すること
 class ViewController2: UIViewController,UITableViewDataSource {
     
