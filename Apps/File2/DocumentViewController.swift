@@ -193,9 +193,9 @@ class ViewController: UIViewController,UITableViewDataSource {
 //<並び替える項目を選択・削除する画面>
     
     //ボタン押下時に呼ばれるメソッド:：編集モード内においては、セルの削除や並び替えやができるようにする
-    @IBAction func changeMode(_ sender: Any) {
+func changeMode(_ sender: Any) {
     }
-    @IBAction func changeMode(sender: AnyObject) {
+func changeMode(sender: AnyObject) {
         //通常モードと編集モードを切り替える。。
         if(testTableView.isEditing == true) {
             testTableView.isEditing = false
@@ -315,7 +315,7 @@ class ViewController: UIViewController,UITableViewDataSource {
 
     
 //最初からあるメソッド
-func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
     }
 
