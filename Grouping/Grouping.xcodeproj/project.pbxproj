@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		746F7E0E1FD1B65800B11248 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = 746F7E0D1FD1B65800B11248 /* Document.swift */; };
+		746F7E101FD1B7D600B11248 /* DocumentBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 746F7E0F1FD1B7D600B11248 /* DocumentBrowserViewController.swift */; };
 		8BBB67031FCA84AB001E6432 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBB67021FCA84AB001E6432 /* AppDelegate.swift */; };
 		8BBB67051FCA84AC001E6432 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBB67041FCA84AB001E6432 /* ViewController.swift */; };
 		8BBB67081FCA84AC001E6432 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8BBB67061FCA84AC001E6432 /* Main.storyboard */; };
@@ -16,6 +18,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		746F7E0D1FD1B65800B11248 /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
+		746F7E0F1FD1B7D600B11248 /* DocumentBrowserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentBrowserViewController.swift; sourceTree = "<group>"; };
 		8BBB66FF1FCA84AB001E6432 /* Grouping.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Grouping.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8BBB67021FCA84AB001E6432 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8BBB67041FCA84AB001E6432 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -62,10 +66,12 @@
 				8BBB67141FCA8646001E6432 /* Grouping.entitlements */,
 				8BBB67021FCA84AB001E6432 /* AppDelegate.swift */,
 				8BBB67041FCA84AB001E6432 /* ViewController.swift */,
+				746F7E0F1FD1B7D600B11248 /* DocumentBrowserViewController.swift */,
 				8BBB67061FCA84AC001E6432 /* Main.storyboard */,
 				8BBB67091FCA84AC001E6432 /* Assets.xcassets */,
 				8BBB670B1FCA84AC001E6432 /* LaunchScreen.storyboard */,
 				8BBB670E1FCA84AC001E6432 /* Info.plist */,
+				746F7E0D1FD1B65800B11248 /* Document.swift */,
 			);
 			path = Grouping;
 			sourceTree = "<group>";
@@ -160,6 +166,8 @@
 			files = (
 				8BBB67051FCA84AC001E6432 /* ViewController.swift in Sources */,
 				8BBB67031FCA84AB001E6432 /* AppDelegate.swift in Sources */,
+				746F7E0E1FD1B65800B11248 /* Document.swift in Sources */,
+				746F7E101FD1B7D600B11248 /* DocumentBrowserViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

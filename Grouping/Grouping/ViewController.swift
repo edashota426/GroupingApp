@@ -110,9 +110,7 @@ class ViewController3: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // UITextFieldを作成する.
-        myTextField = UITextField(frame: CGRectMake(0,0,200,30))
-        
+      
         // 表示する文字を代入する.
         myTextField.text = "Hello Swift!!"
         

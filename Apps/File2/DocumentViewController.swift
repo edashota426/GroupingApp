@@ -44,9 +44,9 @@ class DocumentViewController: UIViewController {
             .DocumentDirectory
             .UserDomainMask,
             true)[0] as! String
-print("documentsPath",: \(documentsPath))
+print("documentsPath",:\(documentsPath))
     //UIDocumentサブクラスの概要
-class USDocument: UIdocument {
+class USDocument: UIDocument {
     
     //各データに対応したstatic定数を宣言する
     struct USFileWrapperKeys {
@@ -209,7 +209,7 @@ func changeMode(sender: AnyObject) {
         
         //削除の場合、配列からデータを削除する。
         if( editingStyle == UITableViewCellEditingStyle.delete) {
-            dataList.remove(at: indexPath.row)
+            DataList.remove(at: indexPath.row)
         }
         
         //テーブルの再読み込み
@@ -223,10 +223,10 @@ func changeMode(sender: AnyObject) {
         let moveData = tableView.cellForRow(at: sourceIndexPath)?.textLabel!.text
         
         //元の位置のデータを配列から削除する。
-        dataList.remove(at: sourceIndexPath.row)
+        DataList.remove(at: sourceIndexPath.row)
         
         //移動先の位置にデータを配列に挿入する。
-        dataList.insert(moveData!, at:destinationIndexPath.row)
+        DataList.insert(moveData!, at:destinationIndexPath.row)
     }
 //<並び替えるグループ数を表示する画面>：icloud containerの獲得時に最初から指定できているのか？実装した時に確認
     class ViewController: UIViewController, UITextFieldDelegate {
