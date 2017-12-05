@@ -1,9 +1,9 @@
 //
-//  Document.swift
-//  File2
+//  ViewController.swift
+//  Grouping
 //
-//  Created by 登坂直弥 on 2017/10/25.
-//  Copyright © 2017年 super.naoya. All rights reserved.
+//  Created by 登坂直弥 on 2017/11/30.
+//  Copyright © 2017年 GroupingAppTeam. All rights reserved.
 //
 
 import UIKit

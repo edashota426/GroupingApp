@@ -16,12 +16,12 @@ class DocumentViewController: UIViewController {
     }
     @IBOutlet weak var documentNameLabel: UILabel!
     
-    var document: UIDocument?
+    var document: UIDocument?//ドキュメントオブジェクトを使って、ドキュメント形式のデータ構造を生成、管理。ドキュメントクラスには、新規ドキュメントをiCloudコンテナやローカルストレージに保存する機能が組み込まれている
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        // iCloud File画面への繊維
+        // iCloud File画面への遷移
         document?.open(completionHandler: { (success) in
             if success {
                 // Display the content of the document, e.g.:
@@ -38,41 +38,16 @@ class DocumentViewController: UIViewController {
         }
     }
 }
-//アプリ内にファイルを保存する
-    //サンドボックスの場所を得る
-        let documentsPath = NSSewarchPathForDirectoriesInDomains(#colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-            .DocumentDirectory
-            .UserDomainMask,
-            true)[0] as! String
-print("documentsPath",:\(documentsPath))
-    //UIDocumentサブクラスの概要
-class USDocument: UIDocument {
-    
-    //各データに対応したstatic定数を宣言する
-    struct USFileWrapperKeys {
-        static let IMG = "USDocument.img"
-        static let PLACE = "USDocument.place"
-        static let DATE = "USDocument.date"
-        static let DETAIL = "USDocument.detail"
-    }
-    //記録したい内容を保持するメンバ変数を宣言します
-    var img:UIImage?
-    var place:String?
-    var date:NSDate?
-    var detail:String?
-    //上記の内容をひとまとめにパッケージするNSFileWrapperも、
-    //メンバ変数として宣言する
-    var fileWrapper:FileWrapper?
-    
-    //MARK:読み出し、書きこみ用のメソッド
-    override func loadFromContents(contents: AnyObject,
-        ofType TypeName:String,
-        error outError:NSErrorPointer) -> Bool {
-        ...}
-    override func contentsForType(typeName: String,
-                                  error outError: NSErrorPointer) -> Bool {
-        ...}
-}
+//UIDocumentにはアプリケーションがファイルを読み書きするためには、ファイルコーディネーションを利用する必要あり。
+
+//apple developper programより
+    //ファイル名をイニシャライズする
+-init;"groupingFile"
+    //iOS上にreturnする場所の指定、bundle nameを埋め込むべき
+    - (NSURL *)containerURLForSecurityApplicationGroupIdentifier:(NSString *)groupIdentifier;
+
+//ここまでapple developper programより
+
 //iCLoud kit用のコードはこちら。上記は削除して良い
 class ViewController: UIViewController, UITextFieldDelegate {
     
@@ -112,7 +87,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @objc func writeTextToiCloudContainer() {
         
         // 特定の iCloud Container を指定する場合
-        // let url = FileManager.default.url(forUbiquityContainerIdentifier: "iCloud.com.joyplot")
+        _ = FileManager.default.url(forUbiquityContainerIdentifier: "iCloud.com.joyplot")
         
         DispatchQueue.global().async(execute: {
             
@@ -170,156 +145,120 @@ class ViewController: UIViewController, UITextFieldDelegate {
 
 //ここまでがicloud containerの獲得と、書き出し、読み込み、保存。
 
-//11/18 test 始まり
-//<ドキュメントファイルからrowを読み込み、UITableViewに表示させるメソッド> ->どこからファイル持ってくるのか指定する必要あり。
-class ViewController: UIViewController,UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        <#code#>
+//icloudにてファイルを選択できるコードUIDocumentPickerViewController
+class SampleViewController : UIViewController, UIDocumentPickerDelegate {
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // UIDocumentPickerViewControllerを開く
+        let picker = UIDocumentPickerViewController(documentTypes: [("com.apple.iwork.pages.pages" as NSString) as String], in: UIDocumentPickerMode.open)
+        picker.delegate = self
+        present(picker, animated: true, completion: nil)
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        <#code#>
+    // MARK: UIDocumentPickerDelegate
+    
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
+        print(#function)
+        print("opened url : \(url)")
     }
     
-    @IBOutlet weak var testTableView: UITableView!
-    //hsdGroupingTest.csv
-    var dataList:[String] = []
-    
-    
-
-    }
-// 11/18test
-    
-//<並び替える項目を選択・削除する画面>
-    
-    //ボタン押下時に呼ばれるメソッド:：編集モード内においては、セルの削除や並び替えやができるようにする
-func changeMode(_ sender: Any) {
-    }
-func changeMode(sender: AnyObject) {
-        //通常モードと編集モードを切り替える。。
-        if(testTableView.isEditing == true) {
-            testTableView.isEditing = false
-        } else {
-            testTableView.isEditing = true
-        }
+    func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+        print(#function)
     }
     
-    //テーブルビュー編集時に呼ばれるメソッド:編集モード時に、項目を削除することができる
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+//ここまでがicloudにてファイルを選択できるコードUIDocumentPickerViewController
+//
+    //テーブルビューに表示させる。
+    
+    class ViewController : UIViewController, UITableViewDelegate, UITableViewDataSource {
         
-        //削除の場合、配列からデータを削除する。
-        if( editingStyle == UITableViewCellEditingStyle.delete) {
-            DataList.remove(at: indexPath.row)
-        }
+        // ステータスバーの高さ
+        let statusBarHeight = UIApplication.shared.statusBarFrame.height
         
-        //テーブルの再読み込み
-        tableView.reloadData()
-    }
-    
-    //並び替え時に呼ばれるメソッド：編集モード時に、並び替えることができる
-    private func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: IndexPath, toIndexPath destinationIndexPath: IndexPath){
+        // チェックリストの項目とチェック状態
+        var checkListItem: [String : Bool] = [
+            "RISA" : true,
+            "AIRI" : false,
+            "KEN" : true,
+            "MAI" : true,
+            "TOMOKO": false
+        ]
         
-        //移動されたデータを取得する。
-        let moveData = tableView.cellForRow(at: sourceIndexPath)?.textLabel!.text
-        
-        //元の位置のデータを配列から削除する。
-        DataList.remove(at: sourceIndexPath.row)
-        
-        //移動先の位置にデータを配列に挿入する。
-        DataList.insert(moveData!, at:destinationIndexPath.row)
-    }
-//<並び替えるグループ数を表示する画面>：icloud containerの獲得時に最初から指定できているのか？実装した時に確認
-    class ViewController: UIViewController, UITextFieldDelegate {
-        
-        private var myTextField: UITextField!
+        let tableView = UITableView()
         
         override func viewDidLoad() {
             super.viewDidLoad()
             
-            // UITextFieldを作成する.
-            myTextField = UITextField(frame: CGRectMake(0,0,200,30))
-            
-            // 表示する文字を代入する.
-            myTextField.text = "Hello Swift!!"
-            
-            // Delegateを設定する.
-            myTextField.delegate = self
-            
-            // 枠を表示する.
-            myTextField.borderStyle = UITextBorderStyle.roundedRect
-            
-            // UITextFieldの表示する位置を設定する.
-            myTextField.layer.position = CGPoint(x:self.view.bounds.width/2,y:100);
-            
-            // Viewに追加する.
-            self.view.addSubview(myTextField)
+            // UITableView の作成
+            tableView.frame = CGRect(
+                x: 0,
+                y: statusBarHeight,
+                width: self.view.frame.width,
+                height: self.view.frame.height - statusBarHeight
+            )
+            tableView.delegate = self
+            tableView.dataSource = self
+            self.view.addSubview(tableView)
         }
         
-        override func didReceiveMemoryWarning() {
-            super.didReceiveMemoryWarning()
-        }
-        
-        /*
-         UITextFieldが編集された直後に呼ばれるデリゲートメソッド.
-         */
-        func textFieldDidBeginEditing(_ textField: UITextField){
-            print("textFieldDidBeginEditing:" + textField.text!)
-        }
-        
-        /*
-         UITextFieldが編集終了する直前に呼ばれるデリゲートメソッド.
-         */
-        func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
-            print("textFieldShouldEndEditing:" + textField.text!)
+        // セルの作成
+        func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             
-            return true
-        }
-        
-        /*
-         改行ボタンが押された際に呼ばれるデリゲートメソッド.
-         */
-        func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-            textField.resignFirstResponder()
+            // Dictonary のキーの配列を取得
+            var keys = [String](checkListItem.keys)
             
-            return true
+            // キーで並び替え
+            keys.sort()
+            
+            // キーの文字列を取得
+            let cellText = keys[indexPath.row]
+            
+            // セルの作成とテキストの設定
+            let cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
+            cell.textLabel?.text = cellText
+            
+            // チェック状態が true なら、初めからチェック状態にする
+            if self.checkListItem[cellText]! {
+                cell.imageView?.image = UIImage(named: "checked")
+            } else {
+                cell.imageView?.image = UIImage(named: "unchecked")
+            }
+            
+            return cell
         }
         
+        // セルがタップされた時の処理
+        func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+            
+            if let cell = tableView.cellForRow(at: indexPath) {
+                
+                // タップしたセルのテキストを取得
+                let cellText = cell.textLabel?.text
+                
+                // 画像を切り替えと Dictonary の値を変更
+                if cell.imageView?.image == UIImage(named: "checked") {
+                    
+                    self.checkListItem.updateValue(false, forKey: cellText!)
+                    cell.imageView?.image = UIImage(named: "unchecked")
+                } else {
+                    
+                    self.checkListItem.updateValue(true, forKey: cellText!)
+                    cell.imageView?.image = UIImage(named: "checked")
+                }
+                
+                // 選択状態を解除
+                cell.isSelected = false
+            }
+        }
+        
+        func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+            return 56
+        }
+        
+        func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+            return self.checkListItem.count
+        }
     }
-//＜グルーピング開始ボタン押下時に呼ばれるメソッド:：グルーピングの裏の処理開始と、画面遷移＞
-    //ファイルに、「カテゴリ」「グループ数」を外部引数として飛ばす。
-    
-    //並び替えが終了した時に、次の画面遷移
-    //失敗した時の画面移動しない
-    
-    //<並び替えた結果を表示する画面>
-        //<並び替えた結果をTableViewに表示する>＝<ドキュメントファイルからrowを読み込み、UITableViewに表示させるメソッド>
-class ViewController: UIViewController,UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        <#code#>
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        <#code#>
-    }
-    
-    @IBOutlet weak var testTableView: UITableView!
-    //hsdGroupingTest.csv
-    var dataList:[String] = []
-
-    
-    //<保存ボタンを押下時に、呼ばれるメソッド：データをcsvファイルとしてicloudに保存する>
-        //<並び替えた結果を>
-    
-    //<>
-    //
-
-    
-//最初からあるメソッド
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
-
-
-
-
-
+}
+//icloud fileファイルからホーム画面へかえってくる

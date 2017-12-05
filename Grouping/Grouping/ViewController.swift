@@ -8,23 +8,22 @@
 
 import UIKit
 
-class ViewController: UIViewController {
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
+//class ViewController: UIViewController {
+    
+    //override func viewDidLoad() {
+        //super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
+    //}
+    
+    //override func didReceiveMemoryWarning() {
+        //super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-    }
+    //}
 //ここから書き足していったコード
-    
 //ファイルを選択する
-    class DocumentViewController: UIViewController {
+    class ViewController: UIViewController {
     
-    @IBAction func selectFile(_ sender: Any) {
+        @IBAction func selectFile(_ sender: Any) {
     }
     @IBOutlet weak var documentNameLabel: UILabel!
     
@@ -44,13 +43,13 @@ class ViewController: UIViewController {
     })
     }
     
-    @IBAction func dismissDocumentViewController() {
+    @IBAction func dismissViewController() {
     dismiss(animated: true) {
     self.document?.close(completionHandler: nil)
     }
     }
     }
-}//icloud containerにあるcsvデータを引数に名前を表示すること
+//icloud containerにあるcsvデータを引数に名前を表示すること
 class ViewController2: UIViewController,UITableViewDataSource {
     
     //hsdGroupingTest.csv
